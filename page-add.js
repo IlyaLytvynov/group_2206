@@ -7,7 +7,6 @@ const SUPPORTED_STYLES = ['css', 'scss'];
 const stylesType = minimist(argv)['styles'] || SUPPORTED_STYLES[0];
 const entries = require('./config/entries.json');
 
-
 function checkValid(str){
   const re = /^\S+$/g;
   return re.test(str)
