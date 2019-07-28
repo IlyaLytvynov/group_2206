@@ -61,3 +61,6 @@ console.log(find([4, 6], 23));
 console.log(find([4, 6], 4));
 console.log(find([4, 6], 6));
 console.log(findMax([1, 2, 56, 12, 34, 97, 9, 95, 23])); // 95
+
+
+
