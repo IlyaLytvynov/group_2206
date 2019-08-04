@@ -97,17 +97,18 @@
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _lesson_12_scss__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./lesson_12.scss */ "./src/lesson_12/lesson_12.scss");
 /* harmony import */ var _lesson_12_scss__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_lesson_12_scss__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _scripts_trafficLighter__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./scripts/trafficLighter */ "./src/lesson_12/scripts/trafficLighter.js");
-/* harmony import */ var _scripts_trafficLighterES2015__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./scripts/trafficLighterES2015 */ "./src/lesson_12/scripts/trafficLighterES2015.js");
+/* harmony import */ var _scripts_lighterController__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./scripts/lighterController */ "./src/lesson_12/scripts/lighterController.js");
+/* harmony import */ var _scripts_light__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./scripts/light */ "./src/lesson_12/scripts/light.js");
 
 
 
-var test = [];
-var lighter = new _scripts_trafficLighter__WEBPACK_IMPORTED_MODULE_1__["TrafficLighter"](document.querySelector('.container'), 'TEST');
-var lighter2 = new _scripts_trafficLighterES2015__WEBPACK_IMPORTED_MODULE_2__["TrafficLighterES6"](document.querySelector('.container'), 'MY COOL LIGHTER');
-console.log(lighter);
-window.lighter = lighter;
-window.lighter2 = lighter2;
+var control = new _scripts_lighterController__WEBPACK_IMPORTED_MODULE_1__["LighterController"](document.querySelector('body'));
+var someLight = new _scripts_light__WEBPACK_IMPORTED_MODULE_2__["Light"](document.querySelector('body'));
+var someLight2 = new _scripts_light__WEBPACK_IMPORTED_MODULE_2__["Light"](document.querySelector('body'), 'lime');
+var someLight3 = new _scripts_light__WEBPACK_IMPORTED_MODULE_2__["Light"](document.querySelector('body'), 'red');
+var someLight4 = new _scripts_light__WEBPACK_IMPORTED_MODULE_2__["Light"](document.querySelector('body'), 'rgba(0,0,0,.5)', function () {
+  return console.log('TOGGLE');
+});
 
 /***/ }),
 
@@ -122,111 +123,216 @@ window.lighter2 = lighter2;
 
 /***/ }),
 
-/***/ "./src/lesson_12/scripts/trafficLighter.js":
-/*!*************************************************!*\
-  !*** ./src/lesson_12/scripts/trafficLighter.js ***!
-  \*************************************************/
-/*! exports provided: TrafficLighter */
+/***/ "./src/lesson_12/scripts/light.js":
+/*!****************************************!*\
+  !*** ./src/lesson_12/scripts/light.js ***!
+  \****************************************/
+/*! exports provided: Light */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TrafficLighter", function() { return TrafficLighter; });
-function TrafficLighter(targetElement, id) {
-  this.targetElement = targetElement;
-  this.colors = ['red', 'yellow', 'green'];
-  this.lights = [];
-  this.lighter = 'asdas';
-  this.id = id;
-  this.render();
-  this.renderLights();
-}
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Light", function() { return Light; });
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-TrafficLighter.prototype.render = function render() {
-  this.lighter = document.createElement('div');
-  this.lighter.classList.add('traffic-lighter');
-  this.lighter.id = 'lighter1';
-  this.targetElement.appendChild(this.lighter);
-};
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
-TrafficLighter.prototype.renderLights = function renderLights() {
-  var _this = this;
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-  console.log('>>>>>', this.lights);
-  var _iteratorNormalCompletion = true;
-  var _didIteratorError = false;
-  var _iteratorError = undefined;
+var Light =
+/*#__PURE__*/
+function () {
+  function Light(target) {
+    var color = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'aqua';
+    var onClick = arguments.length > 2 ? arguments[2] : undefined;
 
-  try {
-    var _loop = function _loop() {
-      var color = _step.value;
-      var light = document.createElement('button');
-      light.classList.add('traffic-lighter__light', "traffic-lighter__light_".concat(color));
+    _classCallCheck(this, Light);
 
-      light.onclick = function () {
-        console.log('====', _this);
+    this.target = target;
+    this.color = color;
+    this.onClick = onClick;
+    this.isActive = false;
+    this.render();
+  }
 
-        _this.toggleOffAll();
+  _createClass(Light, [{
+    key: "render",
+    value: function render() {
+      var _this = this;
 
-        light.classList.add('active');
+      this.element = document.createElement('button');
+      this.element.classList.add('traffic-lighter__light');
+
+      this.element.onclick = function () {
+        if (_this.onClick) {
+          _this.onClick();
+        }
+
+        _this.toggle();
       };
 
-      _this.lights.push(light);
-
-      _this.lighter.appendChild(light);
-    };
-
-    for (var _iterator = this.colors[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-      _loop();
+      this.target.appendChild(this.element);
     }
-  } catch (err) {
-    _didIteratorError = true;
-    _iteratorError = err;
-  } finally {
-    try {
-      if (!_iteratorNormalCompletion && _iterator["return"] != null) {
-        _iterator["return"]();
-      }
-    } finally {
-      if (_didIteratorError) {
-        throw _iteratorError;
+  }, {
+    key: "toggle",
+    value: function toggle() {
+      if (this.isActive) {
+        this.toggleOff();
+      } else {
+        this.toggleOn();
       }
     }
+  }, {
+    key: "toggleOn",
+    value: function toggleOn() {
+      this.element.style.backgroundColor = this.color;
+      this.isActive = true;
+    }
+  }, {
+    key: "toggleOff",
+    value: function toggleOff() {
+      this.element.style.backgroundColor = '';
+      this.isActive = false;
+    }
+  }]);
+
+  return Light;
+}();
+
+/***/ }),
+
+/***/ "./src/lesson_12/scripts/lighterController.js":
+/*!****************************************************!*\
+  !*** ./src/lesson_12/scripts/lighterController.js ***!
+  \****************************************************/
+/*! exports provided: LighterController */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LighterController", function() { return LighterController; });
+/* harmony import */ var _trafficLighterES2015__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./trafficLighterES2015 */ "./src/lesson_12/scripts/trafficLighterES2015.js");
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+
+var LighterController =
+/*#__PURE__*/
+function () {
+  function LighterController(targetElement) {
+    _classCallCheck(this, LighterController);
+
+    this.targetElement = targetElement;
+    this.lighters = [];
+    this.render();
+    this.renderButtons();
   }
-};
 
-TrafficLighter.prototype.toggleOffAll = function toggleOffAll() {
-  console.log(this.id);
-  var _iteratorNormalCompletion2 = true;
-  var _didIteratorError2 = false;
-  var _iteratorError2 = undefined;
-
-  try {
-    for (var _iterator2 = this.lights[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-      var light = _step2.value;
-      light.classList.remove('active');
+  _createClass(LighterController, [{
+    key: "render",
+    value: function render() {
+      var container = document.createElement('div');
+      this.header = document.createElement('header');
+      this.content = document.createElement('div');
+      container.appendChild(this.header);
+      container.appendChild(this.content);
+      this.targetElement.appendChild(container);
     }
-  } catch (err) {
-    _didIteratorError2 = true;
-    _iteratorError2 = err;
-  } finally {
-    try {
-      if (!_iteratorNormalCompletion2 && _iterator2["return"] != null) {
-        _iterator2["return"]();
-      }
-    } finally {
-      if (_didIteratorError2) {
-        throw _iteratorError2;
+  }, {
+    key: "renderButtons",
+    value: function renderButtons() {
+      var _this = this;
+
+      var addButton = document.createElement('button');
+      var toggleOnButton = document.createElement('button');
+      var toggleOffButton = document.createElement('button');
+      addButton.textContent = '+';
+      toggleOnButton.textContent = 'on';
+      toggleOffButton.textContent = 'off';
+
+      addButton.onclick = function () {
+        _this.addLighter();
+      };
+
+      toggleOffButton.onclick = function () {
+        _this.toggleOffAllLighters();
+      };
+
+      toggleOnButton.onclick = function () {
+        _this.toggleOnAllLighters();
+      };
+
+      this.header.appendChild(addButton);
+      this.header.appendChild(toggleOnButton);
+      this.header.appendChild(toggleOffButton);
+    }
+  }, {
+    key: "toggleOffAllLighters",
+    value: function toggleOffAllLighters() {
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = this.lighters[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var lighter = _step.value;
+          lighter.toggleOff();
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator["return"] != null) {
+            _iterator["return"]();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
       }
     }
-  }
-};
+  }, {
+    key: "toggleOnAllLighters",
+    value: function toggleOnAllLighters() {
+      var _iteratorNormalCompletion2 = true;
+      var _didIteratorError2 = false;
+      var _iteratorError2 = undefined;
 
-TrafficLighter.prototype.disable = function disable() {
-  this.toggleOffAll();
-};
+      try {
+        for (var _iterator2 = this.lighters[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+          var lighter = _step2.value;
+          lighter.toggleOn();
+        }
+      } catch (err) {
+        _didIteratorError2 = true;
+        _iteratorError2 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion2 && _iterator2["return"] != null) {
+            _iterator2["return"]();
+          }
+        } finally {
+          if (_didIteratorError2) {
+            throw _iteratorError2;
+          }
+        }
+      }
+    }
+  }, {
+    key: "addLighter",
+    value: function addLighter() {
+      var lighter = new _trafficLighterES2015__WEBPACK_IMPORTED_MODULE_0__["TrafficLighterES6"](this.content);
+      this.lighters.push(lighter);
+    }
+  }]);
 
-
+  return LighterController;
+}();
 
 /***/ }),
 
@@ -240,11 +346,14 @@ TrafficLighter.prototype.disable = function disable() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TrafficLighterES6", function() { return TrafficLighterES6; });
+/* harmony import */ var _light__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./light */ "./src/lesson_12/scripts/light.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+
 
 var TrafficLighterES6 =
 /*#__PURE__*/
@@ -257,24 +366,67 @@ function () {
     this.lights = [];
     this.lighter = 'asdas';
     this.id = id;
+    this.activeIndex = 0;
     this.render();
     this.renderLights();
+    this.startAutoSwitch();
   }
 
   _createClass(TrafficLighterES6, [{
+    key: "validateNextIndex",
+    value: function validateNextIndex() {
+      return this.activeIndex + 1 < this.colors.length;
+    }
+  }, {
+    key: "enableLight",
+    value: function enableLight() {
+      this.toggleOff();
+      this.lights[this.activeIndex].toggleOn();
+    }
+  }, {
+    key: "nextLight",
+    value: function nextLight() {
+      this.activeIndex = this.validateNextIndex() ? this.activeIndex + 1 : 0;
+      this.enableLight();
+    }
+  }, {
+    key: "stopAutoSwitch",
+    value: function stopAutoSwitch() {
+      clearInterval(this.intervalId);
+    }
+  }, {
+    key: "startAutoSwitch",
+    value: function startAutoSwitch() {
+      var _this = this;
+
+      this.intervalId = setInterval(function () {
+        _this.nextLight();
+      }, 1000);
+    }
+  }, {
     key: "render",
     value: function render() {
+      var _this2 = this;
+
       this.lighter = document.createElement('div');
       this.lighter.classList.add('traffic-lighter');
       this.lighter.id = 'lighter1';
+
+      this.lighter.onmouseenter = function () {
+        _this2.stopAutoSwitch();
+      };
+
+      this.lighter.onmouseleave = function () {
+        _this2.startAutoSwitch();
+      };
+
       this.targetElement.appendChild(this.lighter);
     }
   }, {
     key: "renderLights",
     value: function renderLights() {
-      var _this = this;
+      var _this3 = this;
 
-      console.log('>>>>>', this.lights);
       var _iteratorNormalCompletion = true;
       var _didIteratorError = false;
       var _iteratorError = undefined;
@@ -282,20 +434,16 @@ function () {
       try {
         var _loop = function _loop() {
           var color = _step.value;
-          var light = document.createElement('button');
-          light.classList.add('traffic-lighter__light', "traffic-lighter__light_".concat(color));
+          var light = new _light__WEBPACK_IMPORTED_MODULE_0__["Light"](_this3.lighter, color, function () {
+            _this3.toggleOff();
 
-          light.onclick = function () {
-            console.log('====', _this);
+            var currentIndex = _this3.lights.indexOf(light);
 
-            _this.toggleOffAll();
+            _this3.activeIndex = currentIndex;
+            console.log(_this3.activeIndex);
+          });
 
-            light.classList.add('active');
-          };
-
-          _this.lights.push(light);
-
-          _this.lighter.appendChild(light);
+          _this3.lights.push(light);
         };
 
         for (var _iterator = this.colors[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
@@ -317,8 +465,8 @@ function () {
       }
     }
   }, {
-    key: "toggleOffAll",
-    value: function toggleOffAll() {
+    key: "toggleOff",
+    value: function toggleOff() {
       console.log(this.id);
       var _iteratorNormalCompletion2 = true;
       var _didIteratorError2 = false;
@@ -327,7 +475,7 @@ function () {
       try {
         for (var _iterator2 = this.lights[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
           var light = _step2.value;
-          light.classList.remove('active');
+          light.toggleOff();
         }
       } catch (err) {
         _didIteratorError2 = true;
@@ -345,9 +493,14 @@ function () {
       }
     }
   }, {
+    key: "toggleOn",
+    value: function toggleOn() {
+      this.lights[0].toggleOn();
+    }
+  }, {
     key: "disable",
     value: function disable() {
-      this.toggleOffAll();
+      this.toggleOff();
     }
   }]);
 

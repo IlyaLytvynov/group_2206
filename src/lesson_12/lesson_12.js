@@ -1,10 +1,9 @@
 import './lesson_12.scss';
-import { TrafficLighter } from './scripts/trafficLighter';
-import { TrafficLighterES6 } from './scripts/trafficLighterES2015';
+import { LighterController } from './scripts/lighterController';
+import { Light } from './scripts/light';
 
-const test = [];
-const lighter = new TrafficLighter(document.querySelector('.container'), 'TEST');
-const lighter2 = new TrafficLighterES6(document.querySelector('.container'), 'MY COOL LIGHTER');
-console.log(lighter);
-window.lighter = lighter;
-window.lighter2 = lighter2;
+const control = new LighterController(document.querySelector('body'));
+const someLight = new Light(document.querySelector('body'));
+const someLight2 = new Light(document.querySelector('body'), 'lime');
+const someLight3 = new Light(document.querySelector('body'), 'red');
+const someLight4 = new Light(document.querySelector('body'), 'rgba(0,0,0,.5)', () => console.log('TOGGLE'));
