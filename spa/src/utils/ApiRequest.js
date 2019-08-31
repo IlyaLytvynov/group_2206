@@ -30,9 +30,13 @@ export class ApiRequest {
     }
 
     post(data, onSuccess, onError) {
+        const token = this.options.token;
         const xhr = new XMLHttpRequest();
         xhr.open('POST', this.url);
         xhr.setRequestHeader('Content-Type', 'application/json');
+        if (token) {
+            xhr.setRequestHeader('Authorization', `Bearer ${token}`);
+        }
         xhr.send(JSON.stringify(data));
 
         xhr.onreadystatechange = () => {

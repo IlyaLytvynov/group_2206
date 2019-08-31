@@ -4,8 +4,8 @@ import "./LogInForm.scss";
 
 export class LogInForm extends Component {
   state = {
-    email: "TEst value",
-    password: ""
+    email: "a@a.a",
+    password: "123"
   };
   submitHandler = e => {
     e.preventDefault();
